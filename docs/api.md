@@ -67,11 +67,13 @@ Returns [file objects](#file-objects) for the specified hashes.
 
 <div class="tester" data-method="GET" data-endpoint="/api/v2/{ list }">
 <pre class="response">$ curl https://mediacru.sh/api/v2/hash1,hash2,hash3
-[
-    { file object },
-    { file object },
-    { file object }
-]</pre>
+{
+    'list': [
+        { file object },
+        { file object },
+        { file object }
+    ]
+}</pre>
     <div class="parameters">
         <input type="text" name="list" placeholder="hash,hash,hash..." value="5HM9b5vnEHbU,U37IX05BI_5j,EM41XyYgaI65" />
         <input type="button" class="submit" value="Submit"></button>
@@ -85,11 +87,13 @@ Deletes one or more file objects. You must include the `userToken` cookie.
 
 <div class="tester" data-method="DELETE" data-endpoint="/api/v2/{ list }">
 <pre class="response">$ curl -X DELETE https://mediacru.sh/api/v2/hash1,hash2,hash3
-[
-    { "success": true },
-    { "success": false, "error": 404 },
-    { "success": false, "error": 403 }
-]</pre>
+{
+    'list': [
+        {"result": "success", "hash": hash1},
+        {"result": "not_found", "hash": hash2},
+        {"result": "unauthorized", "hash": hash3}
+    ]
+}</pre>
     <div class="parameters">
         <input type="text" name="list" placeholder="hash,hash,hash..." value="5HM9b5vnEHbU,U37IX05BI_5j,EM41XyYgaI65" />
         <input type="button" class="submit" value="Submit"></button>
@@ -103,21 +107,17 @@ Updates editable properties on file objects. Your POST body should be a JSON str
 with the properties set as you would like them to be.
 
 <div class="tester" data-method="POST" data-endpoint="/api/v2/{ list }">
-<pre class="response">$ curl -F '[ { "flags": { "loop": true } }, ... ]' https://mediacru.sh/api/v2/hash1,hash2,hash3
-[
-    { file object },
-    { file object },
-    { file object }
-]</pre>
+<pre class="response">$ curl -F '[{"flags": {"loop": true}}, ...]' https://mediacru.sh/api/v2/hash1,hash2,hash3
+{
+    'list': [
+        { file object },
+        { file object },
+        { file object }
+    ]
+}</pre>
     <div class="parameters">
         <input type="text" name="list" placeholder="hash,hash,hash..." value="5HM9b5vnEHbU,U37IX05BI_5j,EM41XyYgaI65" />
-        <textarea name="__body__" placeholder="json blob...">
-[
-    { "flags": { "loop": true } },
-    { "flags": { "nsfw": true } },
-    { "flags": { "autoplay": false, "mute": true } }
-]
-        </textarea>
+        <textarea name="__body__" placeholder="json blob..."></textarea>
         <input type="button" class="submit" value="Submit"></button>
     </div>
 </div>
@@ -145,7 +145,51 @@ Creates a new album.
 
 ### File Objects
 
-    Example goes here
+    {
+      "blob_type": "video",
+      "compression": 4.41,
+      "extras": [
+        {
+          "type": "image/jpeg",
+          "url": "https://mediacru.sh/lfkM4lq1pD3F.jpg"
+        }
+      ],
+      "files": [
+        {
+          "type": "image/gif",
+          "url": "https://mediacru.sh/lfkM4lq1pD3F.gif"
+        },
+        {
+          "type": "video/mp4",
+          "url": "https://mediacru.sh/lfkM4lq1pD3F.mp4"
+        },
+        {
+          "type": "video/webm",
+          "url": "https://mediacru.sh/lfkM4lq1pD3F.webm"
+        },
+        {
+          "type": "video/ogg",
+          "url": "https://mediacru.sh/lfkM4lq1pD3F.ogv"
+        }
+      ],
+      "flags": {
+        "autoplay": true,
+        "loop": true,
+        "mute": true,
+        "nsfw": false
+      },
+      "hash": "lfkM4lq1pD3F",
+      "metadata": {
+        "dimensions": {
+          "height": 152,
+          "width": 250
+        },
+        "has_audio": false,
+        "has_subtitles": false,
+        "has_video": true
+      },
+      "original": "https://mediacru.sh/lfkM4lq1pD3F.gif"
+    }
 
 Details details details
 
@@ -164,6 +208,7 @@ Albums are a special kind of file object. If `file.type == "album"`, then it's a
 ## Common Tasks
 
 <div id="uploading"></div>
+
 ### Uploading
 
 To upload a file, use one of the upload endpoints. TODO: Finish this.
